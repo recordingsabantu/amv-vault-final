@@ -1,30 +1,11 @@
 'use client'
-import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '../../utils/supabase'
-import { 
-  Music, 
-  Upload, 
-  DollarSign, 
-  BarChart3, 
-  Settings, 
-  LogOut, 
-  User,
-  ShieldCheck
-} from 'lucide-react'
+import Sidebar from '../../components/Sidebar' // <-- THE IMPORT
+import { Upload, Music, BarChart3, DollarSign, ShieldCheck } from 'lucide-react'
 
 export default function Dashboard() {
   const router = useRouter()
-  const [loading, setLoading] = useState(false)
 
-  // 1. Function to handle Logout
-  const handleLogout = async () => {
-    setLoading(true)
-    await supabase.auth.signOut()
-    router.push('/login')
-  }
-
-  // 2. Function to navigate to Upload page
   const goToUpload = () => {
     router.push('/dashboard/upload')
   }
@@ -32,42 +13,10 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-[#0F0908] text-white flex">
       
-      {/* SIDEBAR */}
-      <aside className="w-64 border-r border-[#C5A059]/20 p-6 flex flex-col justify-between">
-        <div>
-          <div className="flex items-center gap-2 mb-10">
-            <div className="w-8 h-8 bg-[#C5A059] rounded-full flex items-center justify-center text-black font-bold">V</div>
-            <h2 className="text-xl font-bold text-[#C5A059] tracking-tighter">AMV VAULT</h2>
-          </div>
-          
-          <nav className="flex flex-col gap-2">
-            <div className="flex items-center gap-3 text-[#C5A059] bg-[#C5A059]/10 p-3 rounded-lg cursor-pointer font-medium">
-              <BarChart3 size={20}/> Analytics
-            </div>
-            <div className="flex items-center gap-3 text-gray-400 p-3 hover:text-white hover:bg-white/5 rounded-lg transition cursor-pointer">
-              <Music size={20}/> My Releases
-            </div>
-            <div className="flex items-center gap-3 text-gray-400 p-3 hover:text-white hover:bg-white/5 rounded-lg transition cursor-pointer">
-              <DollarSign size={20}/> Payouts
-            </div>
-            <div className="flex items-center gap-3 text-gray-400 p-3 hover:text-white hover:bg-white/5 rounded-lg transition cursor-pointer">
-              <User size={20}/> Artist Profile
-            </div>
-          </nav>
-        </div>
+      {/* 1. THE SIDEBAR COMPONENT */}
+      <Sidebar />
 
-        {/* BOTTOM SIDEBAR */}
-        <div className="border-t border-[#C5A059]/10 pt-6">
-          <div 
-            onClick={handleLogout}
-            className="flex items-center gap-3 text-red-400 p-3 hover:bg-red-500/10 rounded-lg transition cursor-pointer"
-          >
-            <LogOut size={20}/> {loading ? 'Logging out...' : 'Sign Out'}
-          </div>
-        </div>
-      </aside>
-
-      {/* MAIN CONTENT */}
+      {/* 2. THE MAIN CONTENT */}
       <main className="flex-1 p-10 overflow-y-auto">
         <header className="flex justify-between items-center mb-10">
           <div>
@@ -111,26 +60,14 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* RELEASES SECTION */}
+        {/* RELEASES LIST */}
         <div className="bg-[#1E1412] rounded-2xl border border-[#C5A059]/10 p-1">
-          <div className="p-6 border-b border-[#C5A059]/10">
-            <h3 className="font-bold">Recent Submissions</h3>
+          <div className="p-6 border-b border-[#C5A059]/10 text-sm font-bold opacity-70">
+            RECENT SUBMISSIONS
           </div>
-          
           <div className="h-80 flex flex-col items-center justify-center text-center p-10">
-            <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-4">
-              <Music size={32} className="text-gray-600"/>
-            </div>
-            <h4 className="text-lg font-bold mb-2">No Music Found</h4>
-            <p className="text-gray-500 max-w-xs mb-6 text-sm">
-              Your vault is currently empty. Start your distribution by creating a new release.
-            </p>
-            <button 
-              onClick={goToUpload}
-              className="text-[#C5A059] text-sm font-bold hover:underline"
-            >
-              Upload your first track &rarr;
-            </button>
+            <Music size={40} className="text-gray-700 mb-4"/>
+            <p className="text-gray-500 text-sm">No releases found. Push your first track to the DSPs.</p>
           </div>
         </div>
       </main>
