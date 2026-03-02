@@ -5,14 +5,13 @@ export default function Home() {
   const router = useRouter()
 
   return (
-    /* FIXED: Using h-screen and fixed inset-0 to ensure the background covers the whole screen */
     <div className="relative w-full h-screen bg-black text-white overflow-hidden">
       
-      {/* BACKGROUND LAYER */}
+      {/* BACKGROUND LAYER - FORCED TO FULL SCREEN */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
+        className="fixed inset-0 bg-cover bg-center bg-no-repeat z-0"
         style={{ 
-          backgroundImage: "linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.85)), url('/bg-amv.jpg')" 
+          backgroundImage: "linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.85)), url('/bg-amv.jpg')" 
         }}
       />
 
@@ -30,8 +29,8 @@ export default function Home() {
             AMV VAULT
           </h1>
           
-          <p className="text-lg md:text-xl text-gray-400 mb-12 font-medium tracking-tight max-w-xl mx-auto leading-relaxed">
-            The future of African sound. Global distribution, 100% royalties, total control.
+          <p className="text-lg md:text-xl text-gray-400 mb-12 font-medium tracking-tight max-w-xl mx-auto leading-relaxed uppercase">
+            Global distribution. 100% royalties. Durban Sound.
           </p>
 
           {/* PRICING CARDS */}
