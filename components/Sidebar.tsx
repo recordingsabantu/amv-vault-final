@@ -1,51 +1,35 @@
 'use client'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Music, BarChart, Wallet, User, BadgeCheck, ShieldEllipsis, Plus } from 'lucide-react'
+import { LayoutDashboard, Music2, BarChart3, Wallet, UserCircle, ShieldCheck, CreditCard, PlusCircle } from 'lucide-react'
 
-const navItems = [
-  { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
-  { name: 'My Releases', icon: Music, path: '/dashboard/releases' },
-  { name: 'Analytics', icon: BarChart, path: '/dashboard/analytics' },
-  { name: 'Payouts', icon: Wallet, path: '/dashboard/payouts' },
-  { name: 'Artist Profile', icon: User, path: '/dashboard/profile' },
-  { name: 'Verification', icon: BadgeCheck, path: '/dashboard/verification' },
-  { name: 'Pricing Plans', icon: ShieldEllipsis, path: '/dashboard/pricing' },
+const menu = [
+  { name: 'Dashboard', icon: LayoutDashboard, path: '/' },
+  { name: 'My Releases', icon: Music2, path: '/releases' },
+  { name: 'Analytics', icon: BarChart3, path: '/analytics' },
+  { name: 'Payouts', icon: Wallet, path: '/payouts' },
+  { name: 'Artist Profile', icon: UserCircle, path: '/profile' },
+  { name: 'Verification', icon: ShieldCheck, path: '/verification' },
+  { name: 'Pricing Plans', icon: CreditCard, path: '/pricing' },
 ]
 
 export default function Sidebar() {
-  const pathname = usePathname()
-
   return (
-    <aside className="w-80 h-screen bg-black/60 backdrop-blur-3xl border-r border-white/5 p-8 flex flex-col sticky top-0">
-      <div className="mb-14 px-2 italic font-black text-3xl tracking-tighter text-[#C5A059]">
-        AMV <span className="text-white">VAULT</span>
-      </div>
-
+    <aside className="w-72 h-screen bg-black border-r border-white/5 p-8 flex flex-col sticky top-0 z-50">
+      <div className="mb-12 font-black italic text-3xl tracking-tighter text-[#C5A059]">AMV <span className="text-white">VAULT</span></div>
+      
       <nav className="flex-1 space-y-2">
-        {navItems.map((item) => {
-          const active = pathname === item.path
-          return (
-            <Link 
-              key={item.name} 
-              href={item.path}
-              className={`flex items-center gap-4 px-6 py-4 rounded-2xl transition-all font-bold uppercase tracking-widest text-[10px] ${
-                active ? 'bg-[#C5A059] text-black shadow-lg shadow-[#C5A059]/20' : 'text-gray-500 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              <item.icon size={18} />
-              {item.name}
-            </Link>
-          )
-        })}
+        {menu.map((item) => (
+          <div key={item.name} className="flex items-center gap-4 px-5 py-4 rounded-2xl text-gray-500 hover:bg-white/5 hover:text-[#C5A059] transition-all cursor-pointer">
+            <item.icon size={20} />
+            <span className="text-[11px] font-bold uppercase tracking-[0.2em]">{item.name}</span>
+          </div>
+        ))}
       </nav>
 
-      <div className="mt-auto space-y-4">
-        <button className="w-full bg-white text-black font-black py-5 rounded-3xl flex items-center justify-center gap-2 hover:bg-[#C5A059] transition-colors shadow-2xl">
-          <Plus size={20} />
-          <span className="text-[10px] uppercase tracking-widest">New Release</span>
-        </button>
-      </div>
+      <button className="mt-auto w-full bg-[#C5A059] text-black font-black py-5 rounded-3xl flex items-center justify-center gap-2 hover:scale-105 transition-transform shadow-xl shadow-[#C5A059]/10">
+        <PlusCircle size={20} />
+        <span className="text-[10px] uppercase tracking-widest">New Release</span>
+      </button>
     </aside>
   )
 }
