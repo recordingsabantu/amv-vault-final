@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { supabase } from '@/utils/supabase'
+import { supabase } from '../../utils/supabase'
 import { Mail, Loader2 } from 'lucide-react'
 
 export default function LoginPage() {
