@@ -1,53 +1,76 @@
 'use client'
-import { useRouter } from 'next/navigation'
-import { supabase } from '../utils/supabase'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { 
-  Music, 
-  DollarSign, 
+  LayoutDashboard, 
+  Music2, 
   BarChart3, 
-  User, 
-  LogOut 
+  CircleDollarSign, 
+  UserCircle, 
+  ShieldCheck, 
+  CreditCard,
+  PlusCircle,
+  LogOut
 } from 'lucide-react'
 
-export default function Sidebar() {
-  const router = useRouter()
+const menuItems = [
+  { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
+  { name: 'My Releases', icon: Music2, path: '/dashboard/releases' },
+  { name: 'Analytics', icon: BarChart3, path: '/dashboard/analytics' },
+  { name: 'Payouts', icon: CircleDollarSign, path: '/dashboard/payouts' },
+  { name: 'Artist Profile', icon: UserCircle, path: '/dashboard/profile' },
+  { name: 'Verification', icon: ShieldCheck, path: '/dashboard/verification' },
+  { name: 'Pricing Plans', icon: CreditCard, path: '/dashboard/pricing' },
+]
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-    router.push('/login')
-  }
+export default function Sidebar() {
+  const pathname = usePathname()
 
   return (
-    <aside className="w-64 border-r border-[#C5A059]/20 p-6 flex flex-col justify-between h-screen sticky top-0">
-      <div>
-        <div className="flex items-center gap-2 mb-10">
-          <div className="w-8 h-8 bg-[#C5A059] rounded-full flex items-center justify-center text-black font-bold">V</div>
-          <h2 className="text-xl font-bold text-[#C5A059] tracking-tighter">AMV VAULT</h2>
+    <aside className="w-72 h-screen bg-black/40 backdrop-blur-2xl border-r border-white/10 flex flex-col p-6 sticky top-0 shadow-2xl">
+      {/* BRANDING */}
+      <div className="mb-12 px-2 flex items-center gap-3">
+        <div className="w-10 h-10 bg-[#C5A059] rounded-xl flex items-center justify-center shadow-lg shadow-[#C5A059]/20">
+            <span className="text-black font-black text-xl italic">A</span>
         </div>
-        
-        <nav className="flex flex-col gap-2">
-          <div className="flex items-center gap-3 text-[#C5A059] bg-[#C5A059]/10 p-3 rounded-lg cursor-pointer font-medium">
-            <BarChart3 size={20}/> Analytics
-          </div>
-          <div className="flex items-center gap-3 text-gray-400 p-3 hover:text-white hover:bg-white/5 rounded-lg transition cursor-pointer">
-            <Music size={20}/> My Releases
-          </div>
-          <div className="flex items-center gap-3 text-gray-400 p-3 hover:text-white hover:bg-white/5 rounded-lg transition cursor-pointer">
-            <DollarSign size={20}/> Payouts
-          </div>
-          <div className="flex items-center gap-3 text-gray-400 p-3 hover:text-white hover:bg-white/5 rounded-lg transition cursor-pointer">
-            <User size={20}/> Artist Profile
-          </div>
-        </nav>
+        <div>
+            <h2 className="text-xl font-black italic tracking-tighter text-white">AMV</h2>
+            <p className="text-[8px] text-[#C5A059] font-bold tracking-[0.3em] uppercase">The Vault</p>
+        </div>
       </div>
 
-      <div className="border-t border-[#C5A059]/10 pt-6">
-        <div 
-          onClick={handleLogout}
-          className="flex items-center gap-3 text-red-400 p-3 hover:bg-red-500/10 rounded-lg transition cursor-pointer"
-        >
-          <LogOut size={20}/> Sign Out
-        </div>
+      {/* NAVIGATION */}
+      <nav className="flex-1 space-y-1">
+        {menuItems.map((item) => {
+          const isActive = pathname === item.path
+          return (
+            <Link 
+              key={item.name} 
+              href={item.path}
+              className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group ${
+                isActive 
+                  ? 'bg-[#C5A059] text-black shadow-lg shadow-[#C5A059]/20 font-bold' 
+                  : 'text-gray-400 hover:bg-white/5 hover:text-white'
+              }`}
+            >
+              <item.icon size={22} className={isActive ? 'text-black' : 'text-gray-500 group-hover:text-[#C5A059]'} />
+              <span className="text-sm tracking-tight uppercase font-bold">{item.name}</span>
+            </Link>
+          )
+        })}
+      </nav>
+
+      {/* FOOTER ACTIONS */}
+      <div className="mt-auto space-y-4 pt-6 border-t border-white/5">
+        <button className="w-full bg-gradient-to-r from-[#C5A059] to-[#E5C079] text-black font-black py-4 rounded-2xl flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform shadow-xl">
+          <PlusCircle size={20} />
+          <span className="text-xs uppercase tracking-widest">New Release</span>
+        </button>
+        
+        <button className="w-full flex items-center gap-4 px-4 py-3 rounded-2xl text-red-500/60 hover:text-red-500 hover:bg-red-500/5 transition-all group">
+          <LogOut size={20} />
+          <span className="text-xs font-black uppercase tracking-widest">Logout</span>
+        </button>
       </div>
     </aside>
   )
