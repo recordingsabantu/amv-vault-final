@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div className="relative w-full h-screen bg-black text-white overflow-hidden">
       
-      {/* BACKGROUND LAYER - FORCED TO FULL SCREEN */}
+      {/* BACKGROUND LAYER - FIXED TO FULL SCREEN */}
       <div 
         className="fixed inset-0 bg-cover bg-center bg-no-repeat z-0"
         style={{ 
@@ -18,7 +18,6 @@ export default function Home() {
       {/* CONTENT LAYER */}
       <div className="relative z-10 h-full w-full flex flex-col items-center justify-center p-4">
         
-        {/* THE MODERN VAULT CONTAINER */}
         <div className="max-w-4xl w-full bg-black/40 backdrop-blur-2xl border border-white/10 p-8 md:p-16 rounded-[40px] shadow-2xl text-center">
           
           <div className="inline-block bg-[#C5A059]/10 text-[#C5A059] border border-[#C5A059]/20 px-4 py-1 rounded-full text-[10px] font-black tracking-widest mb-6 uppercase">
@@ -29,11 +28,10 @@ export default function Home() {
             AMV VAULT
           </h1>
           
-          <p className="text-lg md:text-xl text-gray-400 mb-12 font-medium tracking-tight max-w-xl mx-auto leading-relaxed uppercase">
+          <p className="text-lg md:text-xl text-gray-400 mb-12 font-medium tracking-tight max-w-xl mx-auto leading-relaxed">
             Global distribution. 100% royalties. Durban Sound.
           </p>
 
-          {/* PRICING CARDS */}
           <div className="grid md:grid-cols-2 gap-6 text-left">
             {/* BASIC */}
             <div className="bg-white/5 border border-white/10 p-8 rounded-3xl hover:bg-white/10 transition-all cursor-pointer group shadow-xl">
