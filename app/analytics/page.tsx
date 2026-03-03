@@ -1,5 +1,5 @@
 'use client'
-import Sidebar from '../components/Sidebar'
+import Sidebar from '../../components/Sidebar'
 import { TrendingUp, Globe, Users, PlayCircle, BarChart } from 'lucide-react'
 
 export default function AnalyticsPage() {
