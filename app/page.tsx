@@ -6,32 +6,19 @@ export default function Home() {
   const router = useRouter()
 
   return (
-    <div className="relative min-h-screen bg-black overflow-hidden flex items-center justify-center">
-      {/* THE HALF-SCREEN GLUE BACKGROUND */}
-      <div 
-        className="fixed top-0 right-0 w-full md:w-1/2 h-full opacity-40 z-0 pointer-events-none"
-        style={{
-          backgroundImage: "url('/bg-amv.jpg')",
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          maskImage: 'linear-gradient(to left, black 20%, transparent 100%)',
-          WebkitMaskImage: 'linear-gradient(to left, black 20%, transparent 100%)'
-        }}
-      />
-
+    <div className="relative min-h-screen flex items-center justify-center">
       <div className="relative z-10 text-center px-6 max-w-2xl">
         <header className="mb-10 flex flex-col items-center">
           <div className="w-20 h-20 bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-3xl flex items-center justify-center text-[#C5A059] mb-6 animate-pulse">
             <ShieldCheck size={40} />
           </div>
-          <h2 className="text-[#C5A059] text-[10px] font-black uppercase tracking-[0.5em] mb-4 italic">
+          <h2 className="text-[#C5A059] text-[10px] font-black uppercase tracking-[0.5em] mb-4 italic text-center">
             Abantu Recordings • Global Distribution
           </h2>
-          <h1 className="text-6xl md:text-8xl font-black italic uppercase tracking-tighter leading-none text-white mb-6">
+          <h1 className="text-6xl md:text-8xl font-black italic uppercase tracking-tighter leading-none text-white mb-6 text-center">
             THE <span className="text-[#C5A059]">VAULT</span>
           </h1>
-          <p className="text-gray-400 text-xs uppercase tracking-widest font-bold leading-loose">
+          <p className="text-gray-400 text-xs uppercase tracking-widest font-bold leading-loose text-center">
             Secure Master Ingestion & Royalty Management Portal
           </p>
         </header>
