@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import Sidebar from '../components/Sidebar'
+import Sidebar from '../../components/Sidebar'
 import { User, Camera, Instagram, Globe, Music2, Mail, Save } from 'lucide-react'
 
 export default function ProfilePage() {
