@@ -1,5 +1,5 @@
 'use client'
-import Sidebar from '../components/Sidebar'
+import Sidebar from '../../components/Sidebar'
 import { Wallet, ArrowUpRight, Download, History, Banknote } from 'lucide-react'
 
 export default function PayoutsPage() {
