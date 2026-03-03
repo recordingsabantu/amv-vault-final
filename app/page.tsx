@@ -18,21 +18,31 @@ export default function Home() {
       setSession(session)
       setLoading(false)
     })
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-    })
-
-    return () => subscription.unsubscribe()
   }, [])
 
-  if (loading) return <div className="min-h-screen bg-black flex items-center justify-center text-[#C5A059] font-black italic tracking-widest uppercase">Initializing Vault...</div>
+  if (loading) return <div className="min-h-screen bg-black flex items-center justify-center text-[#C5A059] font-black tracking-widest uppercase">AMV VAULT LOADING...</div>
 
-  // If NOT logged in, show the Login (Mails) page first
   if (!session) {
-    return <Login />
+    return (
+      <div className="relative min-h-screen bg-black overflow-hidden">
+        {/* THE HALF-SCREEN GLUE */}
+        <div 
+          className="fixed top-0 right-0 w-full md:w-1/2 h-full opacity-30 z-0 pointer-events-none"
+          style={{
+            backgroundImage: "url('/bg-amv.jpg')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            maskImage: 'linear-gradient(to left, black 20%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to left, black 20%, transparent 100%)'
+          }}
+        />
+        <div className="relative z-10">
+          <Login />
+        </div>
+      </div>
+    )
   }
 
-  // If logged in, show the Dashboard
   return <ArtistProfile />
 }
