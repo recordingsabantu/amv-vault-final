@@ -1,48 +1,49 @@
 'use client'
-import { useState, useEffect } from 'react'
-import { createClient } from '@supabase/supabase-js'
-import Login from './login/page'
-import ArtistProfile from './profile/page'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
+import { useRouter } from 'next/navigation'
+import { ShieldCheck, ArrowRight } from 'lucide-react'
 
 export default function Home() {
-  const [session, setSession] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
+  const router = useRouter()
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-      setLoading(false)
-    })
-  }, [])
+  return (
+    <div className="relative min-h-screen bg-black overflow-hidden flex items-center justify-center">
+      {/* THE HALF-SCREEN GLUE BACKGROUND */}
+      <div 
+        className="fixed top-0 right-0 w-full md:w-1/2 h-full opacity-40 z-0 pointer-events-none"
+        style={{
+          backgroundImage: "url('/bg-amv.jpg')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          maskImage: 'linear-gradient(to left, black 20%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to left, black 20%, transparent 100%)'
+        }}
+      />
 
-  if (loading) return <div className="min-h-screen bg-black flex items-center justify-center text-[#C5A059] font-black tracking-widest uppercase">AMV VAULT LOADING...</div>
+      <div className="relative z-10 text-center px-6 max-w-2xl">
+        <header className="mb-10 flex flex-col items-center">
+          <div className="w-20 h-20 bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-3xl flex items-center justify-center text-[#C5A059] mb-6 animate-pulse">
+            <ShieldCheck size={40} />
+          </div>
+          <h2 className="text-[#C5A059] text-[10px] font-black uppercase tracking-[0.5em] mb-4 italic">
+            Abantu Recordings • Global Distribution
+          </h2>
+          <h1 className="text-6xl md:text-8xl font-black italic uppercase tracking-tighter leading-none text-white mb-6">
+            THE <span className="text-[#C5A059]">VAULT</span>
+          </h1>
+          <p className="text-gray-400 text-xs uppercase tracking-widest font-bold leading-loose">
+            Secure Master Ingestion & Royalty Management Portal
+          </p>
+        </header>
 
-  if (!session) {
-    return (
-      <div className="relative min-h-screen bg-black overflow-hidden">
-        {/* THE HALF-SCREEN GLUE */}
-        <div 
-          className="fixed top-0 right-0 w-full md:w-1/2 h-full opacity-30 z-0 pointer-events-none"
-          style={{
-            backgroundImage: "url('/bg-amv.jpg')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            maskImage: 'linear-gradient(to left, black 20%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to left, black 20%, transparent 100%)'
-          }}
-        />
-        <div className="relative z-10">
-          <Login />
-        </div>
+        <button 
+          onClick={() => router.push('/profile')}
+          className="group relative inline-flex items-center gap-4 bg-[#C5A059] text-black font-black px-12 py-6 rounded-full uppercase text-xs tracking-[0.4em] hover:bg-white transition-all shadow-2xl shadow-[#C5A059]/20"
+        >
+          Enter Portal
+          <ArrowRight className="group-hover:translate-x-2 transition-transform" size={18} />
+        </button>
       </div>
-    )
-  }
-
-  return <ArtistProfile />
+    </div>
+  )
 }
