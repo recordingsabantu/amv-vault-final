@@ -1,64 +1,71 @@
 'use client'
 import { useState } from 'react'
 import Sidebar from '../../components/Sidebar'
-// THE FIX: Adding all icons to the import list to prevent "ReferenceError"
-import { UploadCloud, Music, Image as ImageIcon, ShieldCheck, CheckCircle, Info } from 'lucide-react'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { Music, Image as ImageIcon, CheckCircle, Loader2, ShieldCheck } from 'lucide-react'
 
 export default function DistributeMusic() {
-  const [agreed, setAgreed] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [status, setStatus] = useState('')
+  const supabase = createClientComponentClient()
 
   return (
-    <div className="flex min-h-screen bg-black text-white selection:bg-[#C5A059]/30">
-      <Sidebar />
-      <main className="flex-1 p-8 md:p-12 relative overflow-hidden">
-        
-        {/* THE BACKGROUND FIX */}
-        <div 
-          className="absolute inset-0 bg-[url('/bg-amv.jpg')] bg-cover bg-center bg-fixed opacity-30 -z-10" 
-        />
-        <div className="absolute inset-0 bg-black/70 -z-10" />
+    <div className="flex min-h-screen bg-black text-white selection:bg-[#C5A059]/30 relative">
+      
+      {/* THE "GLUED" BACKGROUND: This stays full-screen and never moves */}
+      <div 
+        className="fixed inset-0 z-0 pointer-events-none"
+        style={{
+          backgroundImage: "url('/bg-amv.jpg')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          opacity: '0.4' 
+        }}
+      />
+      
+      {/* THE OVERLAY: Glued on top of the image to make it look premium/dark */}
+      <div className="fixed inset-0 bg-gradient-to-tr from-black via-black/80 to-transparent z-0 pointer-events-none" />
 
+      <Sidebar />
+      
+      <main className="flex-1 p-6 md:p-12 relative z-10 overflow-y-auto">
         <div className="max-w-6xl mx-auto">
-          <header className="mb-10">
-            <h2 className="text-[#C5A059] text-[10px] font-black uppercase tracking-[0.5em] mb-2 italic">Vault Ingestion</h2>
-            <h1 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter mb-4">
-              Distribute <span className="text-[#C5A059]">Music</span>
+          <header className="mb-12">
+            <div className="flex items-center gap-3 mb-4">
+               <ShieldCheck className="text-[#C5A059]" size={16} />
+               <span className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400">Secure Distribution Portal</span>
+            </div>
+            <h1 className="text-6xl md:text-8xl font-black italic uppercase tracking-tighter leading-none">
+              Push <span className="text-[#C5A059]">Music</span>
             </h1>
           </header>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 bg-white/5 p-8 md:p-12 rounded-[50px] border border-white/10 backdrop-blur-xl">
-            {/* Metadata Section */}
-            <div className="lg:col-span-2 space-y-8">
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <VaultInput label="Track Title" placeholder="e.g. AmaVampire" />
-                  <VaultInput label="Primary Artist" placeholder="Stage Name" />
-                  <VaultInput label="Genre" placeholder="Amapiano" />
-                  <VaultInput label="Release Date" type="date" />
-               </div>
-
-               <div className="flex items-start gap-4 p-6 bg-[#C5A059]/5 border border-[#C5A059]/10 rounded-[30px]">
-                  <input 
-                    type="checkbox" 
-                    checked={agreed} 
-                    onChange={(e) => setAgreed(e.target.checked)} 
-                    className="w-6 h-6 accent-[#C5A059] mt-1 cursor-pointer" 
-                  />
-                  <p className="text-[10px] text-gray-400 uppercase font-black tracking-widest leading-relaxed">
-                    I verify that I own all rights to this master recording. I authorize <span className="text-[#C5A059]">Abantu Recordings</span> to distribute this content globally.
-                  </p>
-               </div>
-            </div>
-
-            {/* Upload Area */}
-            <div className="space-y-6">
-              <UploadBox icon={ImageIcon} label="Cover Art" sub="3000x3000px" />
-              <UploadBox icon={Music} label="Master Audio" sub="High-Res WAV" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Form Section */}
+            <form className="lg:col-span-2 space-y-6 bg-black/40 backdrop-blur-2xl p-8 md:p-12 rounded-[50px] border border-white/10 shadow-2xl">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                 <VaultInput label="Track Title" placeholder="Enter Song Name" />
+                 <VaultInput label="Primary Artist" placeholder="Artist Stage Name" />
+                 <VaultInput label="Genre" placeholder="Amapiano / Gqom" />
+                 <VaultInput label="Release Date" type="date" />
+              </div>
               
-              <button 
-                disabled={!agreed}
-                className="w-full bg-[#C5A059] text-black font-black py-6 rounded-[35px] uppercase text-xs tracking-[0.4em] hover:bg-white transition-all disabled:opacity-10 shadow-2xl shadow-[#C5A059]/20"
-              >
-                Push to Release
+              <div className="p-6 bg-[#C5A059]/5 border border-[#C5A059]/20 rounded-[30px] flex items-start gap-4">
+                 <input type="checkbox" className="mt-1 w-5 h-5 accent-[#C5A059]" required />
+                 <p className="text-[10px] uppercase font-bold text-gray-400 leading-relaxed tracking-widest">
+                    I confirm that this recording is 100% owned by <span className="text-white">Abantu Recordings</span> and is cleared for global distribution.
+                 </p>
+              </div>
+            </form>
+
+            {/* Upload Section */}
+            <div className="space-y-6">
+              <UploadSlot icon={ImageIcon} label="Cover Art" sub="3000 x 3000 px" />
+              <UploadSlot icon={Music} label="Master Audio" sub="High-Res WAV Only" />
+              
+              <button className="w-full bg-[#C5A059] text-black font-black py-8 rounded-[40px] uppercase text-xs tracking-[0.5em] hover:bg-white transition-all shadow-2xl shadow-[#C5A059]/20 active:scale-95">
+                Initialize Release
               </button>
             </div>
           </div>
@@ -70,19 +77,19 @@ export default function DistributeMusic() {
 
 function VaultInput({ label, ...props }: any) {
   return (
-    <div>
-      <label className="text-[9px] font-black uppercase tracking-widest text-gray-400 mb-2 block ml-2 italic">{label}</label>
-      <input {...props} className="w-full bg-black/60 border border-white/10 p-5 rounded-2xl outline-none focus:border-[#C5A059] transition-all text-sm text-white" />
+    <div className="space-y-2">
+      <label className="text-[9px] font-black uppercase tracking-widest text-[#C5A059] ml-2 italic">{label}</label>
+      <input {...props} className="w-full bg-black/60 border border-white/5 p-6 rounded-3xl outline-none focus:border-[#C5A059] transition-all text-sm placeholder:text-gray-800" />
     </div>
   )
 }
 
-function UploadBox({ icon: Icon, label, sub }: any) {
+function UploadSlot({ icon: Icon, label, sub }: any) {
   return (
-    <label className="h-44 border-2 border-dashed border-white/10 bg-black/40 rounded-[40px] flex flex-col items-center justify-center relative hover:border-[#C5A059]/50 transition-all group cursor-pointer">
-      <Icon className="text-[#C5A059] mb-2 group-hover:scale-110 transition-transform" size={32} />
-      <p className="text-[10px] font-black uppercase tracking-widest text-white">{label}</p>
-      <p className="text-[8px] text-gray-600 mt-1 uppercase">{sub}</p>
+    <label className="h-48 border-2 border-dashed border-white/10 bg-black/60 backdrop-blur-md rounded-[50px] flex flex-col items-center justify-center group cursor-pointer hover:border-[#C5A059]/40 transition-all">
+      <Icon className="text-[#C5A059] mb-3 group-hover:scale-110 transition-transform" size={32} />
+      <span className="text-[10px] font-black uppercase tracking-widest">{label}</span>
+      <span className="text-[8px] text-gray-600 mt-2 uppercase tracking-tighter">{sub}</span>
       <input type="file" className="hidden" />
     </label>
   )
