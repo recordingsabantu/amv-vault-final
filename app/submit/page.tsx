@@ -23,21 +23,7 @@ export default function DistributeMusic() {
   }, [])
 
   return (
-    <div className="flex min-h-screen bg-black text-white relative overflow-hidden">
-      
-      {/* THE HALF-SCREEN GLUE */}
-      <div 
-        className="fixed top-0 right-0 w-full md:w-1/2 h-full opacity-30 z-0 pointer-events-none"
-        style={{
-          backgroundImage: "url('/bg-amv.jpg')",
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          maskImage: 'linear-gradient(to left, black 20%, transparent 100%)',
-          WebkitMaskImage: 'linear-gradient(to left, black 20%, transparent 100%)'
-        }}
-      />
-
+    <div className="flex min-h-screen relative">
       <Sidebar />
       
       <main className="flex-1 p-6 md:p-12 relative z-10 overflow-y-auto">
@@ -74,7 +60,7 @@ export default function DistributeMusic() {
               </div>
             </form>
 
-            <div className="space-y-6">
+            <div className="space-y-6 text-left">
               <UploadBox icon={ImageIcon} label="Cover Art" sub="3000px JPG" />
               <UploadBox icon={Music} label="Master Audio" sub="WAV Only" />
               <button className="w-full bg-[#C5A059] text-black font-black py-8 rounded-[40px] uppercase text-xs tracking-[0.5em] hover:bg-white transition-all shadow-2xl active:scale-95">
