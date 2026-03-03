@@ -1,83 +1,51 @@
 'use client'
-import { useState } from 'react'
-import { supabase } from '../../lib/supabase'
-import { UploadCloud, Music, CheckCircle2 } from 'lucide-react'
+import Sidebar from '../../components/Sidebar'
+import { Play, Disc, CheckCircle, Clock } from 'lucide-react'
 
-export default function UploadMusic() {
-  const [file, setFile] = useState<File | null>(null)
-  const [title, setTitle] = useState('')
-  const [loading, setLoading] = useState(false)
-
-  async function handleUpload() {
-    if (!file || !title) return alert("Please add a Title and File")
-    setLoading(true)
-
-    // 1. Upload file to Supabase Storage
-    const fileName = `${Date.now()}_${file.name}`
-    const { data: uploadData, error: uploadError } = await supabase.storage
-      .from('vault-releases')
-      .upload(fileName, file)
-
-    if (uploadError) {
-      alert("Storage Error: " + uploadError.message)
-      setLoading(false)
-      return
-    }
-
-    // 2. Get the public URL
-    const { data: { publicUrl } } = supabase.storage
-      .from('vault-releases')
-      .getPublicUrl(fileName)
-
-    // 3. Save metadata to the 'releases' table
-    const { error: dbError } = await supabase.from('releases').insert({
-      title: title,
-      artist_name: "Verified Artist", // Later we can pull this from profile
-      file_url: publicUrl,
-      status: 'Pending Review'
-    })
-
-    if (!dbError) {
-      alert("HOUSTON, WE ARE LIVE! Music sent to the Vault.")
-      window.location.reload()
-    }
-    setLoading(false)
-  }
+export default function MyCatalog() {
+  // Mock data for display
+  const releases = [
+    { title: 'Durban Night', artist: 'Artist Name', date: '2026-03-01', status: 'Live' },
+    { title: 'Vampire Piano', artist: 'Artist Name', date: '2026-02-15', status: 'Processing' },
+  ]
 
   return (
-    <div className="bg-white/5 border border-white/10 p-10 rounded-[40px] backdrop-blur-md max-w-2xl mx-auto mt-10">
-      <h2 className="text-3xl font-black italic uppercase tracking-tighter mb-6">Submit to <span className="text-[#C5A059]">Vault</span></h2>
-      
-      <div className="space-y-6">
-        <div>
-          <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 block mb-2">Track Title</label>
-          <input 
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full bg-black/50 border border-white/10 p-4 rounded-2xl text-white outline-none focus:border-[#C5A059] transition-all"
-            placeholder="Enter track name..."
-          />
-        </div>
+    <div className="flex min-h-screen bg-black text-white">
+      <Sidebar />
+      <main className="flex-1 p-8 md:p-12">
+        <header className="mb-12">
+          <h1 className="text-5xl font-black italic uppercase tracking-tighter">My <span className="text-[#C5A059]">Catalog</span></h1>
+          <p className="text-gray-500 text-[10px] tracking-[0.4em] uppercase font-bold mt-2">Active & Pending Distribution</p>
+        </header>
 
-        <div className="border-2 border-dashed border-white/10 rounded-3xl p-10 text-center hover:border-[#C5A059]/50 transition-all cursor-pointer relative">
-          <input 
-            type="file" 
-            accept="audio/*"
-            onChange={(e) => setFile(e.target.files?.[0] || null)}
-            className="absolute inset-0 opacity-0 cursor-pointer"
-          />
-          <UploadCloud className="mx-auto text-[#C5A059] mb-4" size={40} />
-          <p className="text-sm font-bold">{file ? file.name : "Drag & Drop Audio File"}</p>
-          <p className="text-[9px] text-gray-600 uppercase mt-2">WAV or MP3 (Max 20MB)</p>
+        <div className="space-y-4">
+          {releases.map((track, i) => (
+            <div key={i} className="flex items-center justify-between bg-white/5 border border-white/10 p-6 rounded-[30px] hover:bg-white/10 transition-all group">
+              <div className="flex items-center gap-6">
+                <div className="w-16 h-16 bg-black rounded-2xl border border-white/10 flex items-center justify-center text-[#C5A059]">
+                  <Disc size={24} className="group-hover:rotate-180 transition-all duration-1000" />
+                </div>
+                <div>
+                  <h3 className="font-black uppercase tracking-widest text-sm">{track.title}</h3>
+                  <p className="text-gray-500 text-[10px] uppercase font-bold mt-1">{track.artist}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-8">
+                <div className="text-right">
+                  <p className="text-[9px] text-gray-500 uppercase font-black mb-1">Status</p>
+                  <div className={`flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest ${track.status === 'Live' ? 'text-green-500' : 'text-[#C5A059]'}`}>
+                    {track.status === 'Live' ? <CheckCircle size={12} /> : <Clock size={12} />}
+                    {track.status}
+                  </div>
+                </div>
+                <button className="bg-white/10 p-4 rounded-full hover:bg-[#C5A059] hover:text-black transition-all">
+                  <Play size={16} fill="currentColor" />
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
-
-        <button 
-          onClick={handleUpload}
-          disabled={loading}
-          className="w-full bg-[#C5A059] text-black font-black py-5 rounded-2xl uppercase tracking-widest text-[10px] hover:bg-white transition-all disabled:opacity-50"
-        >
-          {loading ? "Transmitting..." : "Push to Distribution"}
-        </button>
-      </div>
+      </main>
     </div>
   )
 }
