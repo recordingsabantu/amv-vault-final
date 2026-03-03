@@ -7,13 +7,13 @@ export default function Sidebar() {
   const pathname = usePathname()
 
   const menu = [
-    { name: 'Dashboard', icon: LayoutDashboard, path: '/' },
-    { name: 'My Releases', icon: Disc, path: '/releases' },
-    { name: 'Submit Music', icon: UploadCloud, path: '/submit' },
-    { name: 'Payouts & Wallet', icon: Wallet, path: '/payouts' },
-    { name: 'Verification', icon: ShieldCheck, path: '/verification' },
-    { name: 'Analytics', icon: BarChart3, path: '/analytics' },
-  ]
+  { name: 'Dashboard', icon: LayoutDashboard, path: '/' },
+  { name: 'My Catalog', icon: Disc, path: '/releases' }, // Changed name to 'Catalog'
+  { name: 'Distribute Music', icon: UploadCloud, path: '/submit' }, // The only upload point
+  { name: 'Payouts', icon: Wallet, path: '/payouts' },
+  { name: 'Identity', icon: ShieldCheck, path: '/verification' },
+  { name: 'Artist Profile', icon: User, path: '/profile' }, // Added this back
+]
 
   return (
     <aside className="w-72 h-screen bg-[#050505] border-r border-white/10 flex flex-col p-6 sticky top-0 z-50">
