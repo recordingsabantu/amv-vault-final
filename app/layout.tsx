@@ -1,7 +1,10 @@
 import './globals.css'
-import { Inter } from 'next/font/google'
+import type { Metadata } from 'next'
 
-const inter = Inter({ subsets: ['latin'] })
+export const metadata: Metadata = {
+  title: 'AMV VAULT | Abantu Recordings',
+  description: 'Proprietary Asset Management',
+}
 
 export default function RootLayout({
   children,
@@ -10,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className="bg-black antialiased">{children}</body>
     </html>
   )
 }
