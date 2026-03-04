@@ -1,95 +1,134 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
 import { createClient } from '@supabase/supabase-js'
-import { Shield, Users, Disc, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { 
+  Shield, 
+  TrendingUp, 
+  Disc, 
+  Users, 
+  Activity, 
+  Lock,
+  ArrowUpRight,
+  Zap
+} from 'lucide-react'
 
-// Initialize Supabase safely
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
 
-export default function SuperAdmin() {
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [loading, setLoading] = useState(true)
-  const router = useRouter()
+export default function AdminDashboard() {
+  const [stats, setStats] = useState({ total: 0, pending: 0, storage: '0 GB' })
+  const [recent, setRecent] = useState<any[]>([])
 
   useEffect(() => {
-    const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
+    const getAdminData = async () => {
+      const { count } = await supabase.from('releases').select('*', { count: 'exact', head: true })
+      const { data: recentData } = await supabase.from('releases').select('*').limit(5).order('created_at', { ascending: false })
       
-      // Replace this email with your actual admin email
-      if (user?.email === 'management@abanturecordings.com') {
-        setIsAdmin(true)
-      } else {
-        // Redirect non-admins to profile
-        router.push('/profile')
-      }
-      setLoading(false)
+      setStats({
+        total: count || 0,
+        pending: recentData?.filter(r => r.status === 'processing').length || 0,
+        storage: '1.2 GB' // This can be calculated via Supabase Storage API later
+      })
+      setRecent(recentData || [])
     }
-    checkUser()
-  }, [router])
-
-  if (loading) return <div className="min-h-screen bg-black flex items-center justify-center text-[#C5A059] font-black italic">VERIFYING AUTHORITY...</div>
-
-  if (!isAdmin) return null
+    getAdminData()
+  }, [])
 
   return (
     <div className="flex min-h-screen bg-black text-white">
       <Sidebar />
-      
-      <main className="flex-1 p-8 md:p-20 relative z-10 overflow-y-auto">
-        <div className="max-w-7xl mx-auto text-left">
+      <main className="flex-1 p-8 md:p-16 relative z-10 overflow-y-auto">
+        <div className="max-w-7xl mx-auto">
           
-          {/* HEADER */}
-          <header className="mb-20">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 mb-6">
-              <Shield size={10} className="text-red-500" />
-              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-red-500">Root Level Access</span>
+          {/* TOP BAR */}
+          <header className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-8 text-left">
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="px-3 py-1 bg-red-500/10 border border-red-500/20 rounded-full flex items-center gap-2">
+                  <Lock size={10} className="text-red-500" />
+                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-red-500">Root Access</span>
+                </div>
+              </div>
+              <h1 className="text-7xl md:text-9xl font-[1000] italic uppercase tracking-tighter leading-none">
+                Vault <span className="text-[#C5A059]">Admin</span>
+              </h1>
             </div>
-            <h1 className="text-7xl md:text-9xl font-[1000] italic uppercase tracking-tighter leading-none">
-              Control <span className="text-[#C5A059]">Center</span>
-            </h1>
+            
+            <div className="bg-white/5 border border-white/10 p-6 rounded-[30px] flex items-center gap-6">
+               <div className="text-right">
+                  <p className="text-[9px] font-black uppercase tracking-widest text-gray-500">System Uptime</p>
+                  <p className="text-lg font-black italic uppercase">99.9%</p>
+               </div>
+               <Activity size={24} className="text-green-500 animate-pulse" />
+            </div>
           </header>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            <AdminStat icon={Users} label="Total Artists" value="12" />
-            <AdminStat icon={Disc} label="Pending ISRC" value="05" color="text-[#C5A059]" />
-            <AdminStat icon={AlertCircle} label="System Alerts" value="00" />
+          {/* KPI GRID */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+            <AdminKpi icon={TrendingUp} label="Total Assets" value={stats.total} />
+            <AdminKpi icon={Disc} label="Processing" value={stats.pending} color="text-[#C5A059]" />
+            <AdminKpi icon={Users} label="Auth Users" value="1" />
+            <AdminKpi icon={Zap} label="Storage Use" value={stats.storage} />
           </div>
 
-          {/* ADMIN TOOLS SECTION */}
-          <section className="bg-white/[0.02] border border-white/5 rounded-[50px] p-12 backdrop-blur-3xl">
-            <h3 className="text-xl font-black italic uppercase tracking-widest mb-10 flex items-center gap-3">
-              <CheckCircle2 className="text-[#C5A059]" size={20} />
-              Vault Health Monitor
-            </h3>
-            
-            <div className="space-y-6">
-              <div className="p-6 bg-white/5 rounded-3xl border border-white/10 flex justify-between items-center">
-                <span className="text-[11px] font-black uppercase tracking-widest">Global Distribution Feed</span>
-                <span className="text-green-500 text-[10px] font-bold uppercase tracking-widest bg-green-500/10 px-4 py-1 rounded-full">Optimal</span>
-              </div>
-              <div className="p-6 bg-white/5 rounded-3xl border border-white/10 flex justify-between items-center">
-                <span className="text-[11px] font-black uppercase tracking-widest">Metadata Sync (DDEX)</span>
-                <span className="text-green-500 text-[10px] font-bold uppercase tracking-widest bg-green-500/10 px-4 py-1 rounded-full">Active</span>
-              </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            {/* RECENT INGESTIONS */}
+            <div className="lg:col-span-8 bg-white/[0.02] border border-white/5 rounded-[50px] p-10 text-left">
+               <h3 className="text-[11px] font-black uppercase tracking-[0.5em] mb-10 text-gray-400 italic">Global Feed</h3>
+               <div className="space-y-4">
+                  {recent.map((release) => (
+                    <div key={release.id} className="flex justify-between items-center p-6 bg-white/5 rounded-3xl border border-white/5">
+                      <div>
+                        <p className="text-xs font-black uppercase tracking-widest">{release.title}</p>
+                        <p className="text-[9px] text-[#C5A059] font-bold uppercase mt-1">{release.artist}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[10px] font-mono text-gray-500">{release.isrc}</p>
+                      </div>
+                    </div>
+                  ))}
+               </div>
             </div>
-          </section>
 
+            {/* SECURITY MONITOR */}
+            <div className="lg:col-span-4 space-y-6">
+               <div className="bg-red-500/5 border border-red-500/10 p-10 rounded-[50px] text-left">
+                  <Shield size={28} className="text-red-500 mb-6" />
+                  <h4 className="text-[11px] font-black uppercase tracking-[0.2em] mb-4">Security Protocol</h4>
+                  <ul className="space-y-3">
+                    <SecurityCheck text="AES-256 Encryption" />
+                    <SecurityCheck text="RLS Master Policy" />
+                    <SecurityCheck text="DDEX Metadata Check" />
+                  </ul>
+               </div>
+
+               <button className="w-full bg-[#C5A059] py-8 rounded-[40px] text-black font-[1000] uppercase text-[11px] tracking-[0.4em] flex items-center justify-center gap-3 hover:bg-white transition-all duration-500">
+                  <ArrowUpRight size={18} />
+                  System Export
+               </button>
+            </div>
+          </div>
         </div>
       </main>
     </div>
   )
 }
 
-function AdminStat({ icon: Icon, label, value, color = "text-white" }: any) {
+function AdminKpi({ icon: Icon, label, value, color = "text-white" }: any) {
   return (
-    <div className="bg-white/[0.02] border border-white/5 p-10 rounded-[40px] text-left">
-      <Icon size={20} className="text-[#C5A059] mb-4" />
-      <p className="text-[9px] font-black uppercase tracking-[0.3em] text-gray-500">{label}</p>
-      <p className={`text-5xl font-[1000] italic uppercase mt-2 tracking-tighter ${color}`}>{value}</p>
+    <div className="bg-white/[0.03] border border-white/10 p-8 rounded-[40px] text-left hover:bg-white/5 transition-all">
+      <Icon size={18} className="text-[#C5A059] mb-4" />
+      <p className="text-[8px] font-black uppercase tracking-[0.3em] text-gray-500">{label}</p>
+      <p className={`text-4xl font-[1000] italic tracking-tighter mt-1 ${color}`}>{value}</p>
     </div>
+  )
+}
+
+function SecurityCheck({ text }: { text: string }) {
+  return (
+    <li className="flex items-center gap-3 text-[9px] font-bold text-gray-500 uppercase tracking-widest">
+      <div className="w-1 h-1 bg-red-500 rounded-full" />
+      {text}
+    </li>
   )
 }
