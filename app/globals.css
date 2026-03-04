@@ -2,19 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 0, 0, 0;
-  --background-end-rgb: 0, 0, 0;
-}
-
 body {
-  color: rgb(var(--foreground-rgb));
   background: black;
-  font-family: 'Inter', sans-serif;
+  color: white;
+  font-family: sans-serif;
 }
 
-/* Custom Gold Glow for the Elite Look */
-.gold-glow {
-  text-shadow: 0 0 20px rgba(197, 160, 89, 0.3);
+/* This makes the "Enter Portal" button look like a pill */
+.btn-elite {
+  @apply bg-white text-black px-8 py-4 rounded-full font-black uppercase tracking-widest hover:bg-[#C5A059] transition-all;
 }
