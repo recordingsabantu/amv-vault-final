@@ -1,0 +1,17 @@
+{
+  "/_not-found": "app/_not-found.js",
+  "/admin/page": "app/admin/page.js",
+  "/catalog/page": "app/catalog/page.js",
+  "/analytics/page": "app/analytics/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/dashboard/payouts/page": "app/dashboard/payouts/page.js",
+  "/dashboard/upload/page": "app/dashboard/upload/page.js",
+  "/login/page": "app/login/page.js",
+  "/payouts/page": "app/payouts/page.js",
+  "/profile/page": "app/profile/page.js",
+  "/releases/page": "app/releases/page.js",
+  "/page": "app/page.js",
+  "/submit/page": "app/submit/page.js",
+  "/verification/page": "app/verification/page.js",
+  "/wallet/page": "app/wallet/page.js"
+}

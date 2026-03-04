@@ -1,0 +1,1 @@
+@tailwind base;@tailwind components;@tailwind utilities;body{background:#000;color:#fff;font-family:sans-serif}.btn-elite{@apply bg-white text-black px-8 py-4 rounded-full font-black uppercase tracking-widest hover:bg-[#C5A059] transition-all}
